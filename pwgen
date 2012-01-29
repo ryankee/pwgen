@@ -1,0 +1,65 @@
+#!/bin/sh 
+VERSION_NUMBER=0.1.0
+
+usage() {
+cat << EOF
+Usage: pwgen [OPTIONS]
+
+Options:
+    -h, --help      Show this message
+    -v, --version   Show version
+EOF
+}
+
+# Change long options to short
+for arg
+do
+  delim=""
+  case "$arg" in
+    --help) args="${args}-h ";;
+    --version) args="${args}-v ";;
+    *) [[ "${arg:0:1}" == "-" ]] || delim="\""
+      args="${args}${delim}${arg}${delim} ";;
+  esac
+done
+eval set -- $args
+
+# Parse command line options.
+while getopts "hv" option; do
+  case "$option" in
+    h)
+      usage
+      exit 0;;
+    v)
+      echo "`basename $0` $VERSION_NUMBER"
+      exit 0;;
+    # getopts issues an error message
+    \?)
+      usage >&2
+      exit 1;;
+  esac
+done
+
+# get the total number of words in the dictionary
+NUM=`cat /usr/share/dict/words | wc -l`;
+
+# get a random first word less than 6 characters
+FIRST_WORD=$(head -n`jot -r 1 1 $NUM` /usr/share/dict/words | awk 'length < 6' | tail -n1);
+
+# get a random second word less than 6 characters
+SECOND_WORD=$(head -n`jot -r 1 1 $NUM` /usr/share/dict/words | awk 'length < 6' | tail -n1);
+
+# generate a random number between 1 and 99
+RAND_NUM=$(jot -r 1 1 99);
+
+# setup our characters
+CHARS=( '!' '@' '#' '$' '%' '^' '&' '*' '-' '_' '=' '+' ']' '[' '}' '{' ':' ';' '"' '.' ',' '<' '>' '?' );
+
+# get a random character
+CHAR_RAND=${CHARS[$(jot -r 1 1 ${#CHARS[*]})]};
+
+# write the generated password to the clipboard
+echo $FIRST_WORD$RAND_NUM$CHAR_RAND$SECOND_WORD | pbcopy;
+
+# write the generated password to the screen
+echo "Bam! Your new password:" $FIRST_WORD$RAND_NUM$CHAR_RAND$SECOND_WORD;
