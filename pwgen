@@ -62,4 +62,6 @@ CHAR_RAND=${CHARS[$(jot -r 1 1 ${#CHARS[*]})]};
 echo $FIRST_WORD$RAND_NUM$CHAR_RAND$SECOND_WORD | pbcopy;
 
 # write the generated password to the screen
-echo "Bam! Your new password:" $FIRST_WORD$RAND_NUM$CHAR_RAND$SECOND_WORD;
+EXPLETIVE=("Bam" "Giggity" "Woot" "Ha cha cha" "Word" "Boo Ya" "Holla" "Hooray" "Hurrah" "Huzzah" "Giddyup" "Yee haw" "Woo hoo" "Falafel" "Yes" "Hip-hip" "Whoopee" "Yippee")
+EXP_RAND=${EXPLETIVE[$(jot -r 1 1 ${#EXPLETIVE[*]})]};
+echo $EXP_RAND"! Your new password:" $FIRST_WORD$RAND_NUM$CHAR_RAND$SECOND_WORD;
